@@ -11,6 +11,7 @@ from __future__ import print_function
 import os
 os.environ['TF_CPP_MIN_LOG_LEVEL']='2'
 import time
+import logging
 
 import numpy as np
 import tensorflow as tf
@@ -20,7 +21,7 @@ import utils
 
 # parameters to manage experiments
 STYLE = 'guernica'
-CONTENT = 'deadpool'
+CONTENT = 'xuan'
 STYLE_IMAGE = 'styles/' + STYLE + '.jpg'
 CONTENT_IMAGE = 'content/' + CONTENT + '.jpg'
 IMAGE_HEIGHT = 250
@@ -141,6 +142,7 @@ def train(model, generated_image, initial_image):
     """ Train your model.
     Don't forget to create folders for checkpoints and outputs.
     """
+    logging.info('start trainning')
     skip_step = 1
     with tf.Session() as sess:
         saver = tf.train.Saver()
@@ -160,6 +162,7 @@ def train(model, generated_image, initial_image):
         
         start_time = time.time()
         for index in range(initial_step, ITERS):
+            logging.info('iteration {}'.format(ITERS))
             if index >= 5 and index < 20:
                 skip_step = 10
             elif index >= 20:
@@ -205,6 +208,7 @@ def main():
 
     model['content_loss'], model['style_loss'], model['total_loss'] = _create_losses(model, 
                                                     input_image, content_image, style_image)
+    logging.info('model created')
     ###############################
     ## TO DO: create optimizer
     model['optimizer'] = tf.train.AdamOptimizer(LR).minimize(model['total_loss'], 

@@ -9,11 +9,17 @@ http://web.stanford.edu/class/cs20si/assignments/a2.pdf
 from __future__ import print_function
 
 import os
+import logging
+import shutil
 
 from PIL import Image, ImageOps
 import numpy as np
 import scipy.misc
 from six.moves import urllib
+
+
+global overwrite
+overwrite = None
 
 def download(download_link, file_name, expected_bytes):
     """ Download the pretrained VGG-19 model if it's not already downloaded """
@@ -30,6 +36,7 @@ def download(download_link, file_name, expected_bytes):
                         ' might be corrupted. You should try downloading it with a browser.')
 
 def get_resized_image(img_path, height, width, save=True):
+    logging.info('resizing {}'.format(img_path))
     image = Image.open(img_path)
     # it's because PIL is column major so you have to change place of width and height
     # this is stupid, i know
@@ -56,7 +63,19 @@ def save_image(path, image):
 
 def make_dir(path):
     """ Create a directory if there isn't one already. """
-    try:
+    global overwrite
+    if os.path.exists(path):
+        logging.info('Path already exist: {}'.format(path))
+        if overwrite:
+            logging.info('Overwriting {}'.format(path))
+        else:
+            res = input('Do you want to rewrite? N(no)/Y(yes)')
+            if not res or res.lower()[0] == 'y':
+                logging.info('Overwriting {}'.format(path))
+                overwrite = True
+                shutil.rmtree(path)
+                os.mkdir(path)
+            else:
+                logging.info('Aborting')
+    else:
         os.mkdir(path)
-    except OSError:
-        pass
