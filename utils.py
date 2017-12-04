@@ -6,11 +6,13 @@ Prepared for the class CS 20SI: "TensorFlow for Deep Learning Research"
 For more details, please read the assignment handout:
 http://web.stanford.edu/class/cs20si/assignments/a2.pdf
 """
-from __future__ import print_function
 
 import os
+import sys
 import logging
 import shutil
+logging.getLogger().setLevel(logging.INFO)
+
 
 from PIL import Image, ImageOps
 import numpy as np
@@ -69,7 +71,7 @@ def make_dir(path):
         if overwrite:
             logging.info('Overwriting {}'.format(path))
         else:
-            res = input('Do you want to rewrite? N(no)/Y(yes)')
+            res = input('Do you want to overwrite {}? \n NO(n or no) / YES(y or yes or press ENTER)\n'.format(path))
             if not res or res.lower()[0] == 'y':
                 logging.info('Overwriting {}'.format(path))
                 overwrite = True
@@ -77,5 +79,7 @@ def make_dir(path):
                 os.mkdir(path)
             else:
                 logging.info('Aborting')
+                sys.exit(0)
     else:
+        logging.info('Creating dir {}'.format(path))
         os.mkdir(path)
