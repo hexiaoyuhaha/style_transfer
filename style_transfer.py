@@ -211,10 +211,9 @@ def train(model, generated_image, initial_image, cfg):
                 start_time = time.time()
 
                 filename = cfg.outputs + '/%d.png' % (index)
-                logging.info('Writing to {}'.format(filename))
                 utils.save_image(filename, gen_image)
 
-                if (index + 1) % 20 == 0:
+                if (index + 1) % 100 == 0:
                     saver.save(sess, cfg.checkpoints + '/style_transfer', index)
 
 
@@ -253,10 +252,18 @@ def style_transfer(cfg):
 
 if __name__ == '__main__':
     exp_w = [
-        [0.5, 1.0, 1.5, 3.0, 4.0],
-        [1.0, 1.0, 1.0, 1.0, 1.0],
-        [4.0, 3.0, 1.5, 1.0, 0.5]
+        # [0.5, 1.0, 1.5, 3.0, 4.0],
+        # [1.0, 1.0, 1.0, 1.0, 1.0],
+        # [4.0, 3.0, 1.5, 1.0, 0.5],
+        # [8.0, 4.0, 2, 1.0, 0.5]
+        [1, 1, 0, 0, 0],
+        [0, 0, 0, 0, 1]
     ]
+    pair = [
+            ('gates', 'mosaic')
+            ]
     for i, w in enumerate(exp_w):
-        cfg = Config(style='example', content='example', suffix='_{}'.format(i), w=w, iters=300, image_height=250, image_width=333)
-        style_transfer(cfg)
+        for content, style in pair:
+            print('content: {}, style: {}'.format(content, style))
+            cfg = Config(style=style, content=content, suffix='_{}'.format(i+4), w=w, iters=300, image_height=250 * 2, image_width=333 * 2)
+            style_transfer(cfg)

@@ -65,6 +65,9 @@ def save_image(path, image):
 
 def make_dir(path):
     """ Create a directory if there isn't one already. """
+    if 'checkpoint' in path:
+        logging.info('This is a checkout point directory, reusing it')
+        return True
     global overwrite
     if os.path.exists(path):
         logging.info('Path already exist: {}'.format(path))

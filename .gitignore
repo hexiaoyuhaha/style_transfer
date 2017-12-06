@@ -1,5 +1,10 @@
 outputs*/
 checkpoints/
 graphs/
-__pycache__/
 imagenet-vgg-verydeep-19.mat
+resized_*.*
+
+# python stuff
+__pycache__/
+*.swp
+.ipynb_checkpoints/
